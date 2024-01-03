@@ -466,6 +466,7 @@ def get_user_info():
         cursor.execute('SELECT * FROM nhanvien WHERE UserID=%s', (user_id,))
         nhanvien = cursor.fetchone()
         user_info = {
+            'NhanVienID': nhanvien[0],
             'HoTen': nhanvien[1],
             'NgaySinh': nhanvien[2],
             'Phone': nhanvien[3],
@@ -1330,17 +1331,15 @@ def bill_add():
     ngaymua = data['ngaymua']
     nhanVienID = data['nhanVienID']
     soLuong = data['soLuong']
+    tongTien = data['tongTien']
     sanPhamIDs = data['sanPhamIDs']
-    for sp_id in sanPhamIDs:
-        cursor.execute('SELECT GiaBan FROM sanpham WHERE SanPhamID=%s', (sp_id,))
-        tongtien += cursor.fetchone()[0]
 
     
     cursor.execute('INSERT INTO khachhang (KhachHangID, HoTen, NgaySinh, Phone, DiaChi, GhiChu) VALUES (%s, %s, %s, %s, %s, %s)', (khachhang_id, hoten, ngaysinh, phone, diachi, ghichu))
     connection.commit()
     
     donhang_id = generate_random_donhang_id()
-    cursor.execute('INSERT INTO donhang (DonHangID, KhachHangID, NhanVienID, NgayMua, SoLuong, TongTien) VALUES (%s, %s, %s, %s, %s, %s)', (donhang_id, khachhang_id, nhanVienID, ngaymua, soLuong, tongtien))
+    cursor.execute('INSERT INTO donhang (DonHangID, KhachHangID, NhanVienID, NgayMua, SoLuong, TongTien) VALUES (%s, %s, %s, %s, %s, %s)', (donhang_id, khachhang_id, nhanVienID, ngaymua, soLuong, tongTien))
     connection.commit()
 
     for sp_id in sanPhamIDs:
