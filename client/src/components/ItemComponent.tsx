@@ -42,10 +42,10 @@ export default function ItemComponent({ onAddToBill }: ItemComponentProps) {
   }, []);
 
   return (
-    <div className="pl-4">
-      <div className="gap-2 grid grid-cols-2 sm:grid-cols-4">
+    <div className="pl-4 w-full">
+      <div className="gap-5 grid grid-cols-2 sm:grid-cols-4 ">
         {itemList?.map((item, index) => (
-          <Card
+          <Card 
             shadow="sm"
             key={index}
             isPressable

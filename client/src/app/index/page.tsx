@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import NavigaComponent from "@/components/NavigaComponent";
-import { getCookie } from "cookies-next";
+import React, { useState } from "react";
+import NavigaComponent from "@/components/NavigaIndexComponent";
 import { Card, CardHeader, CardFooter, Button, Image } from "@nextui-org/react";
 // import Image from "next/image";
 import anh1 from "@/app/images/anh1.jpg";
@@ -9,27 +8,22 @@ import anh2 from "@/app/images/anh2.jpg";
 import anh3 from "@/app/images/anh3.jpg";
 import anh4 from "@/app/images/anh4.jpg";
 import anh5 from "@/app/images/anh5.jpg";
-import ItemComponent from "@/components/ItemComponent";
+import ItemIndexComponent from "@/components/ItemIndexComponent";
+import ItemModal from "@/components/ItemModal";
 import BillComponent from "@/components/BillComponent";
 import { Item } from "../types/item.type";
-import { BillItem } from "../types/billitem.type";
-import http from "@/app/utils/http";
+import { DanhMuc } from "../types/danhmuc.type";
 
 export default function Homepage() {
-  const [billItems, setBillItems] = useState<BillItem[]>([]);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
-  const addToBill = (item: Item) => {
-    const existingItemIndex = billItems.findIndex((billItem) => billItem.item.SanPhamID === item.SanPhamID);
-
-    if (existingItemIndex !== -1) {
-      const updatedBillItems = [...billItems];
-      updatedBillItems[existingItemIndex].quantity += 1;
-      setBillItems(updatedBillItems);
-    } else {
-      setBillItems((prevItems) => [...prevItems, { item: item, quantity: 1 }]);
-    }
+  const onDetailSanPhamHandler = (item: Item) => {
+    setSelectedItem(item);
   };
 
+  const closeModal = () => {
+    setSelectedItem(null);
+  };
 
   return (
     <>
@@ -150,9 +144,9 @@ export default function Homepage() {
           </Card>
         </div>
       </div>
-      <div className="flex">
-        <ItemComponent onAddToBill={addToBill}/>
-        <BillComponent billItems={billItems}/>
+      <div className="flex justify-center items-center">
+        <ItemIndexComponent onDetailSanPham={onDetailSanPhamHandler} setSelectedItem={setSelectedItem} />
+        <ItemModal selectedItem={selectedItem} onClose={closeModal} />
       </div>
     </>
   );

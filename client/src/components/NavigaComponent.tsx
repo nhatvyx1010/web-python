@@ -172,7 +172,7 @@ export default function NavigaComponent() {
                   color="danger"
                   onClick={() => {
                     deleteCookie("token");
-                    router.push(`/login`);
+                    router.push(`/index`);
                   }}
                 >
                   Log Out
