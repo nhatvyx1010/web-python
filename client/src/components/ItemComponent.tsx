@@ -63,7 +63,7 @@ export default function ItemComponent({ onAddToBill }: ItemComponentProps) {
             </CardBody>
             <CardFooter className="text-small justify-between">
               <b>{item.TenSanPham}</b>
-              <p className="text-default-500">{item.GiaBan} VNĐ</p>
+              <p className="text-default-500">{ parseInt(item.GiaBan)} VNĐ</p>
               <Button
                 isIconOnly
                 color="danger"

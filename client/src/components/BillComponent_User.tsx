@@ -25,7 +25,10 @@ interface BillComponentProps {
   onRemoveFromBill: (item: Item) => void;
 }
 
+
+
 export default function BillComponent({ billItems, onRemoveFromBill }: BillComponentProps) {
+  const [khachHangID, setkhachHangID] = useState<string[]>([]);
   const [sanPhamIDs, setSanPhamIDs] = useState<string[]>([]);
   const [soluong, setSoluong] = useState<number>(0);
   const [tongtien, setTongtien] = useState<number>(0);
@@ -38,7 +41,19 @@ export default function BillComponent({ billItems, onRemoveFromBill }: BillCompo
 
   const [billItem, setBillItems] = useState<BillItem[]>([]);
 
+  function formatDateBack(inputDate: string) {
+    const [year, month, day] = inputDate.split('-');
+    return `${day}/${month}/${year}`;
+  }
 
+  function getCurrentDate() {
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+    const year = today.getFullYear();
+  
+    return `${day}/${month}/${year}`;
+  }
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     return value;
@@ -67,22 +82,18 @@ export default function BillComponent({ billItems, onRemoveFromBill }: BillCompo
   };
 
   const handleAdd = async () => {
-    if (ten != "" && ngaysinh != "" && phone != "" && diachi != "" && ghichu != "" && ngaymua != "" && idnhanvien != "") {
+    if (ten != "" && phone != "" && diachi != "" && idnhanvien != "") {
       if(sanPhamIDs && sanPhamIDs.length > 0){
-          const data = {
+        const data = {
           hoten : ten,
-          ngaysinh,
-          phone,
-          diachi,
-          ghichu,
-          ngaymua,
-          nhanVienID: idnhanvien,
+          khachHangID,
+          nhanVienID: "nv000000",
           soLuong: soluong,
           tongTien: tongtien,
           sanPhamIDs
         };
         try {
-          const response = await http.post("bill_add", data);
+          const response = await http.post("bill_add_user", data);
           const result = await response.data;
           console.log(result);
           if (result.status == 200) {
@@ -114,6 +125,37 @@ export default function BillComponent({ billItems, onRemoveFromBill }: BillCompo
     setTongtien(totalMoney);
   }, [billItems]);
 
+useEffect(() => {
+  async function fetchData() {
+    try {
+      const token = getCookie("token")?.toString();
+      const response = await http.get(
+        `get_user_info_user`,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setkhachHangID(response.data.user_info.KhachHangID);
+        setTen(response.data.user_info.HoTen);
+        setNgaysinh(formatDateBack(response.data.user_info.NgaySinh));
+        setPhone(response.data.user_info.Phone);
+        setDiachi(response.data.user_info.DiaChi);
+        setGhichu(response.data.user_info.GhiChu);
+        console.log(response.data.user_info.HoTen);
+      } else {
+        console.log("Loi he thong");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  fetchData();
+}, []);
   
   const [nvID, setNvID] = useState("");
   useEffect(() => {
@@ -121,7 +163,7 @@ export default function BillComponent({ billItems, onRemoveFromBill }: BillCompo
       try {
         const token = getCookie("token")?.toString();
         const response = await http.get(
-          `get_user_info`,
+          `get_user_info_user`,
           {
             headers: {
               Authorization: `${token}`,
@@ -145,7 +187,7 @@ export default function BillComponent({ billItems, onRemoveFromBill }: BillCompo
 
   // //////////////////
   const idnhanvien = nvID;
- 
+  
   return (
     <div className="pl-12 rounded-lg drop-shadow-2xl w-1/2 mr-5">
       <Card className="max-w-[420px]">
@@ -166,7 +208,7 @@ export default function BillComponent({ billItems, onRemoveFromBill }: BillCompo
                       setTen(value);
                     }}
                   />
-                  <Input
+                  {/* <Input
                     key="outside"
                     type="Date"
                     value={ngaysinh}
@@ -176,7 +218,7 @@ export default function BillComponent({ billItems, onRemoveFromBill }: BillCompo
                       const value = handleDateChange(e);
                       setNgaysinh(value);
                     }}
-                  />
+                  /> */}
                 </div>
                 <div className="flex w-full flex-wrap items-end md:flex-nowrap  gap-4 pb-2">
                   <Input
@@ -214,28 +256,20 @@ export default function BillComponent({ billItems, onRemoveFromBill }: BillCompo
                       setGhichu(value);
                     }}
                   />
-                  <Input
-                    key="outside"
-                    type="date"
-                    value={ngaymua}
-                    label=""
-                    // Ngày mua
-                    labelPlacement="outside"
-                    onChange={(e) => {
-                      const value = handleDateChange(e);
-                      setNgaymua(value);
-                    }}
-                  />
-                </div>
-
-                <Input
-                  readOnly
+                  {/* <Input
                   key="outside"
-                  type="text"
-                  value={nvID}
-                  label="ID Nhân viên"
+                  type="date"
+                  value={ngaymua}
+                  label=""
+                  // Ngày mua
                   labelPlacement="outside"
-                />
+                  onChange={(e) => {
+                    const value = handleDateChange(e);
+                    setNgaymua(value);
+                  }}
+                /> */}
+                
+                </div>
               </div>
             </div>
           </CardHeader>

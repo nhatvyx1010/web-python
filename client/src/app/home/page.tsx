@@ -30,6 +30,21 @@ export default function Homepage() {
     }
   };
 
+  const removeFromBill = (item: Item) => {
+    const existingItemIndex = billItems.findIndex(
+      (billItem) => billItem.item.SanPhamID === item.SanPhamID
+    );
+
+    if (existingItemIndex !== -1) {
+      const updatedBillItems = [...billItems];
+      if (updatedBillItems[existingItemIndex].quantity === 1) {
+        updatedBillItems.splice(existingItemIndex, 1);
+      } else {
+        updatedBillItems[existingItemIndex].quantity -= 1;
+      }
+      setBillItems(updatedBillItems);
+    }
+  };
 
   return (
     <>
@@ -151,8 +166,8 @@ export default function Homepage() {
         </div>
       </div>
       <div className="flex">
-        <ItemComponent onAddToBill={addToBill}/>
-        <BillComponent billItems={billItems}/>
+        <ItemComponent onAddToBill={addToBill} />
+        <BillComponent billItems={billItems} onRemoveFromBill={removeFromBill}/>
       </div>
     </>
   );

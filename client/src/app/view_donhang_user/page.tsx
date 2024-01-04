@@ -119,12 +119,13 @@ export default function App() {
               color="primary"
               onClick={() => {
                 const khachHangID = "kh238126"; // Thay thế bằng giá trị khachHangID tương ứng
-                window.location.href = `/quanli_donhang`;
+                window.location.href = `/quanli_donhang_user?id=${khachHangID}`;
               }}
               style={{ margin: 'auto', display: 'block' }}
             >
               Thoát
             </Button>
+
           </div>
         </Card>
       </div>

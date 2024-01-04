@@ -34,8 +34,12 @@ export default function Login() {
         if (d.status == 200) {
           // dispatch(successPopUp(d.message));
           setCookie("token", d.token, { maxAge: 60 * 60 * 24 * 7 });
-          router.push("/home");
-          
+          if(d.role == 'admin'){
+            router.push("/home");
+          }
+          else if(d.role == 'user'){
+            router.push("/home_user");
+          }
         } else {
           router.push("/login");
           // dispatch(failPopUp(d.message));
