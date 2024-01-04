@@ -130,7 +130,7 @@ def api_login():
         # token = jwt.encode({'role': role}, app.config['SECRET_KEY'])
         token = jwt.encode({'role': role, 'user_id': user_id}, app.config['SECRET_KEY'], algorithm='HS256')
         set_token(token)
-        return jsonify({'status': 200, 'token': token, 'user_id': user_id})
+        return jsonify({'status': 200, 'token': token, 'role': role})
     else:
         return jsonify({'error': 'Invalid credentials or insufficient permissions'}), 401
 
@@ -486,6 +486,83 @@ def get_user_info():
         return jsonify({'error': 'Invalid token'}), 401
 
 
+@app.route('/get_user_info_user', methods=['GET'])
+def get_user_info_user():
+    token = request.headers.get('Authorization')  # Lấy token từ header Authorization
+
+    if not token:
+        return jsonify({'error': 'Token is missing'}), 401
+    try:
+        decoded_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        role = decoded_token.get('role')
+        user_id = decoded_token.get('user_id')  
+
+        connection = connect_to_db()
+        cursor = connection.cursor()
+        cursor.execute('SELECT * FROM khachhang WHERE UserID=%s', (user_id,))
+        nhanvien = cursor.fetchone()
+        user_info = {
+            'KhachHangID': nhanvien[0],
+            'HoTen': nhanvien[1],
+            'NgaySinh': nhanvien[4],
+            'Phone': nhanvien[2],
+            'DiaChi': nhanvien[3],
+            'GhiChu': nhanvien[7],
+        }
+        cursor.close()
+        connection.close()
+        
+    
+        response = {'status': 200, 'user_info': user_info}
+        return jsonify(response)
+    except jwt.ExpiredSignatureError:
+        return jsonify({'error': 'Token has expired'}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({'error': 'Invalid token'}), 401
+
+@app.route('/get_user_info_all', methods=['GET'])
+def get_user_info_all():
+    token = request.headers.get('Authorization')  # Lấy token từ header Authorization
+
+    if not token:
+        return jsonify({'error': 'Token is missing'}), 401
+    try:
+        decoded_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        role = decoded_token.get('role')
+        user_id = decoded_token.get('user_id')  
+
+        connection = connect_to_db()
+        cursor = connection.cursor()
+        cursor.execute('SELECT * FROM khachhang WHERE UserID=%s', (user_id,))
+        nhanvien = cursor.fetchone()
+        user_info = {
+            'KhachHangID': nhanvien[0],
+            'HoTen': nhanvien[1],
+            'NgaySinh': nhanvien[4],
+            'Phone': nhanvien[2],
+            'DiaChi': nhanvien[3],
+            'GhiChu': nhanvien[7],
+        }
+
+        cursor.execute('SELECT * FROM user WHERE UserID=%s', (user_id,))
+        nhanvien = cursor.fetchone()
+        user_info_user  = {
+            'Username': nhanvien[1],
+            'Password': nhanvien[2],
+        }
+        user_info.update(user_info_user)
+        cursor.close()
+        connection.close()
+        
+    
+        response = {'status': 200, 'user_info': user_info}
+        return jsonify(response)
+    except jwt.ExpiredSignatureError:
+        return jsonify({'error': 'Token has expired'}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({'error': 'Invalid token'}), 401
+
+
 @app.route('/nhanvien_add', methods=['POST'])
 def nhanvien_add():
     data = request.json
@@ -665,7 +742,42 @@ def khachhang_update(khachhang_id):
         cursor.close()
         connection.close()
 
-        return jsonify({'message': 'Người dùng đã được chỉnh sửa thành công'})
+        return jsonify({'status': 200, 'message': 'Người dùng đã được chỉnh sửa thành công'})
+    else:
+        return jsonify({'message': 'Missing or invalid data in request'})
+
+
+@app.route('/khachhang_update_all/<string:khachhang_id>', methods=['POST'])
+def khachhang_update_all(khachhang_id):
+    data = request.json
+    if 'hoten' in data and 'ngaysinh' in data and 'phone' in data and 'diachi' in data:
+        hoten = data['hoten']
+        ngaysinh = data['ngaysinh']
+        phone = data['phone']
+        diachi = data['diachi']
+        ghichu = data['ghichu']
+        username = data['username']
+        password = data['password']
+
+        
+        connection = connect_to_db()
+        cursor = connection.cursor()
+
+        cursor.execute('UPDATE khachhang SET HoTen = %s, NgaySinh = %s, Phone = %s, DiaChi = %s, GhiChu = %s WHERE KhachHangID = %s',
+                       (hoten, ngaysinh, phone, diachi, ghichu, khachhang_id))
+        connection.commit()
+
+        cursor.execute('SELECT UserID FROM khachhang WHERE KhachHangID=%s', (khachhang_id,))
+        userID = cursor.fetchone()[0]
+
+        cursor.execute('UPDATE user SET Username = %s, Password = %s WHERE UserID = %s',
+                       (username, password, userID))
+        connection.commit()
+
+        cursor.close()
+        connection.close()
+
+        return jsonify({'status': 200, 'message': 'Người dùng đã được chỉnh sửa thành công'})
     else:
         return jsonify({'message': 'Missing or invalid data in request'})
 
@@ -676,7 +788,13 @@ def khachhang_delete(khachhang_id):
     connection = connect_to_db()
     cursor = connection.cursor()
 
+    cursor.execute('SELECT UserID FROM khachhang WHERE KhachHangID=%s', (khachhang_id,))
+    userID = cursor.fetchone()[0]
+
     cursor.execute('DELETE FROM khachhang WHERE KhachHangID = %s', (khachhang_id,))
+    connection.commit()
+
+    cursor.execute('DELETE FROM user WHERE userID = %s', (userID,))
     connection.commit()
 
     cursor.close()
@@ -1042,6 +1160,41 @@ def donhang_index():
     response = {'status': 200, 'donhangs': donhangs_list}
     return jsonify(response)
 
+@app.route('/donhang_list/<string:donhang_id>', methods=['GET'])
+def donhang_list(donhang_id):
+    
+    connection = connect_to_db()
+    cursor = connection.cursor()
+
+    cursor.execute('SELECT * FROM donhang WHERE KhachHangID=%s', donhang_id)
+    donhangs = cursor.fetchall()
+
+    donhangs_list = []
+    for donhang in donhangs:
+        cursor.execute('SELECT HoTen FROM khachhang WHERE KhachHangID = %s', donhang[1])
+        tenkh = cursor.fetchone()
+        cursor.execute('SELECT HoTen FROM nhanvien WHERE NhanVienID = %s', donhang[2])
+        tennv = cursor.fetchone()
+        tenkhachhang = tenkh[0] if tenkh else None
+        tenNhanVien = tennv[0] if tennv else None
+
+        donhang_dict = {
+            'DonHangID': donhang[0],
+            'KhachHangID': donhang[1],
+            'NhanVienID': donhang[2],
+            'NgayMua': donhang[3].strftime('%Y-%m-%d'),
+            'SoLuong': donhang[4],
+            'TongTien': donhang[5],
+            'TenKhachHang': tenkhachhang,
+            'TenNhanVien': tenNhanVien
+        }
+        donhangs_list.append(donhang_dict)
+
+    cursor.close()
+    connection.close()
+
+    response = {'status': 200, 'donhangs': donhangs_list}
+    return jsonify(response)
 # @app.route('/donhang_add', methods=['POST'])
 # def donhang_add():
 #     data = request.json
@@ -1340,6 +1493,37 @@ def bill_add():
     
     donhang_id = generate_random_donhang_id()
     cursor.execute('INSERT INTO donhang (DonHangID, KhachHangID, NhanVienID, NgayMua, SoLuong, TongTien) VALUES (%s, %s, %s, %s, %s, %s)', (donhang_id, khachhang_id, nhanVienID, ngaymua, soLuong, tongTien))
+    connection.commit()
+
+    for sp_id in sanPhamIDs:
+        ctdh_id = generate_random_chitietdonhang_id()
+        cursor.execute('INSERT INTO chitietdonhang (ChiTietDonHangID, DonHangID, SanPhamID, SoLuong) VALUES (%s, %s, %s, %s)', (ctdh_id, donhang_id, sp_id, 1))
+        connection.commit() 
+
+    cursor.close()
+    connection.close()
+
+    return jsonify({'message': 'Người dùng đã được thêm mới thành công', 'status': 200})
+
+
+@app.route('/bill_add_user', methods=['POST'])
+def bill_add_user():
+    data = request.json
+    tongtien = 0
+
+    connection = connect_to_db()
+    cursor = connection.cursor()
+    
+    khachHangID = data['khachHangID']
+    ngaymua = datetime.now().strftime('%Y-%m-%d')
+    nhanVienID = data['nhanVienID']
+    soLuong = data['soLuong']
+    tongTien = data['tongTien']
+    sanPhamIDs = data['sanPhamIDs']
+
+    
+    donhang_id = generate_random_donhang_id()
+    cursor.execute('INSERT INTO donhang (DonHangID, KhachHangID, NhanVienID, NgayMua, SoLuong, TongTien) VALUES (%s, %s, %s, %s, %s, %s)', (donhang_id, khachHangID, nhanVienID, ngaymua, soLuong, tongTien))
     connection.commit()
 
     for sp_id in sanPhamIDs:
