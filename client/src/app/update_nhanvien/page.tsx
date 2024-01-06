@@ -7,6 +7,7 @@ import { MdOutlineDevicesOther } from "react-icons/md";
 import { Tabs, Tab, Card, CardBody, CardHeader } from "@nextui-org/react";
 import FormComponent from "@/components/FormComponent";
 import AddNhanvienComponent from "@/components/AddNhanvienComponent";
+import NavigaComponent from "@/components/NavigaComponent";
 
 interface OptionType {
   value: string;
@@ -60,35 +61,38 @@ export default function AddNhanvien() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="bg-white p-8 rounded-lg drop-shadow-2xl w-1/3">
-        <div className="flex flex-col justify-center items-center gap-1 font-bold h-[desiredHeight] text-lg mb-2.5">
-          <MdOutlineDevicesOther className="text-2xl" />
-          Update nhân viên
-          <Tabs
-            key="primary"
-            color="primary"
-            aria-label="Tabs colors"
-            radius="full"
-          >
-            <Tab key="nhanvien" title="Nhân viên">
-              <AddNhanvienComponent
-                titleInput1="Tên"
-                titleInput2="Ngày sinh"
-                titleInput3="Phone"
-                titleInput4="Địa chỉ"
-                titleInput5="Gmail"
-                titleInput6="Username"
-                titleInput7="Password"
-                titleInput8="Ghi chú"
-                push="/quanli_danhsach"
-                titilebutton = "Update"
-                handleFunction={handleAdd}
-              />
-            </Tab>
-          </Tabs>
+    <>
+      <NavigaComponent />
+      <div className="flex justify-center items-center h-screen">
+        <div className="bg-white p-8 rounded-lg drop-shadow-2xl w-1/3">
+          <div className="flex flex-col justify-center items-center gap-1 font-bold h-[desiredHeight] text-lg mb-2.5">
+            <MdOutlineDevicesOther className="text-2xl" />
+            Update nhân viên
+            <Tabs
+              key="primary"
+              color="primary"
+              aria-label="Tabs colors"
+              radius="full"
+            >
+              <Tab key="nhanvien" title="Nhân viên">
+                <AddNhanvienComponent
+                  titleInput1="Tên"
+                  titleInput2="Ngày sinh"
+                  titleInput3="Phone"
+                  titleInput4="Địa chỉ"
+                  titleInput5="Gmail"
+                  titleInput6="Username"
+                  titleInput7="Password"
+                  titleInput8="Ghi chú"
+                  push="/quanli_danhsach"
+                  titilebutton = "Update"
+                  handleFunction={handleAdd}
+                />
+              </Tab>
+            </Tabs>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

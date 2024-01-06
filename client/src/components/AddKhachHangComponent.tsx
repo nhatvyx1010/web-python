@@ -120,8 +120,6 @@ export default function AddNhanvienComponent({
                     setUsername(value);
                   }}
                 />
-              </div>
-              <div className="flex mb-5 gap-5">
                 <Input
                   isRequired
                   type="password"
@@ -132,24 +130,26 @@ export default function AddNhanvienComponent({
                     const value = handleInputChange(e);
                     setPassword(value);
                   }}
-                />
-
+                  />
+              </div>
+              <div>
                 <Input
                   isRequired
                   type="text"
                   label={titleInput8}
                   value={ghichu}
                   className="h-12"
+                  style={{ width: "370px" }}
                   onChange={(e) => {
                     const value = handleInputChange(e);
                     setGhichu(value);
                   }}
                 />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
       <div className="flex justify-around">
         <Button
           color="danger"

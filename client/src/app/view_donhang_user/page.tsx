@@ -11,6 +11,7 @@ import {
 import http from "../utils/http";
 import { useSearchParams } from "next/navigation";
 import { Infodonhang } from "../types/info.type";
+import NavigaComponent from "@/components/NavigaUserComponent";
 
 export default function App() {
   const params = useSearchParams();
@@ -56,79 +57,82 @@ export default function App() {
   }, []);
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="p-8 rounded-lg drop-shadow-2xl w-1/3">
-        <Card className="max-w-[340px]">
-          <div className="flex flex-col justify-center items-center gap-1 font-bold h-[desiredHeight] text-lg mb-2.5 mt-2.5">
-            <h2>Hóa đơn thanh toán</h2>
-            <CardHeader className="justify-between">
-              <div className="flex gap-5">
-                <div className="flex flex-col gap-1 items-start justify-center">
-                  <h4 className="text-small font-semibold leading-none text-default-600">
-                    ID Đơn hàng: {iddonhang}
-                  </h4>
-                  <h4 className="text-small font-semibold leading-none text-default-600">
-                    ID Khách hàng: {idkhachhang}
-                  </h4>
-                  <h4 className="text-small font-semibold leading-none text-default-600">
-                    ID Nhân viên: {idnhanvien}
-                  </h4>
-                  <h5 className="text-small tracking-tight text-default-400">
-                    @{ngaymua}
-                  </h5>
+    <>
+      <NavigaComponent />
+      <div className="flex justify-center items-center h-screen">
+        <div className="p-8 rounded-lg drop-shadow-2xl w-1/3">
+          <Card className="max-w-[340px]">
+            <div className="flex flex-col justify-center items-center gap-1 font-bold h-[desiredHeight] text-lg mb-2.5 mt-2.5">
+              <h2>Hóa đơn thanh toán</h2>
+              <CardHeader className="justify-between">
+                <div className="flex gap-5">
+                  <div className="flex flex-col gap-1 items-start justify-center">
+                    <h4 className="text-small font-semibold leading-none text-default-600">
+                      ID Đơn hàng: {iddonhang}
+                    </h4>
+                    <h4 className="text-small font-semibold leading-none text-default-600">
+                      ID Khách hàng: {idkhachhang}
+                    </h4>
+                    <h4 className="text-small font-semibold leading-none text-default-600">
+                      ID Nhân viên: {idnhanvien}
+                    </h4>
+                    <h5 className="text-small tracking-tight text-default-400">
+                      @{ngaymua}
+                    </h5>
+                  </div>
                 </div>
-              </div>
-            </CardHeader>
-            <CardBody className="px-3 py-0 text-small text-default-400">
-              {sanphamList?.map((sanpham, index) => (
-                <div
-                  key={index + 1}
-                  className="flex flex-col gap-1 items-start justify-center"
-                >
-                  -------------------------------------------------
-                  <h4 className="text-small font-semibold leading-none text-default-600">
-                    {index + 1}. Tên sản phẩm: {sanpham.TenSanPham}
-                  </h4>
-                  <h4 className="text-small font-semibold leading-none text-default-600">
-                    Giá bán: {parseInt(sanpham.GiaBan)} VNĐ
-                  </h4>
-                  <h4 className="text-small font-semibold leading-none text-default-600">
-                    Danh mục: {sanpham.TenDanhMuc}
-                  </h4>
-                  <h4 className="text-small font-semibold leading-none text-default-600">
-                    {/* Số lượng: {sanpham.} */}
-                  </h4>
+              </CardHeader>
+              <CardBody className="px-3 py-0 text-small text-default-400">
+                {sanphamList?.map((sanpham, index) => (
+                  <div
+                    key={index + 1}
+                    className="flex flex-col gap-1 items-start justify-center"
+                  >
+                    -------------------------------------------------
+                    <h4 className="text-small font-semibold leading-none text-default-600">
+                      {index + 1}. Tên sản phẩm: {sanpham.TenSanPham}
+                    </h4>
+                    <h4 className="text-small font-semibold leading-none text-default-600">
+                      Giá bán: {parseInt(sanpham.GiaBan)} VNĐ
+                    </h4>
+                    <h4 className="text-small font-semibold leading-none text-default-600">
+                      Danh mục: {sanpham.TenDanhMuc}
+                    </h4>
+                    <h4 className="text-small font-semibold leading-none text-default-600">
+                      {/* Số lượng: {sanpham.} */}
+                    </h4>
+                  </div>
+                ))}
+              </CardBody>
+              <CardFooter className="gap-3">
+                <div className="flex gap-1">
+                  <p className=" text-default-400 text-small">Số lượng: </p>
+                  <p className="font-semibold text-default-400 text-small">
+                    {soluong}
+                  </p>
                 </div>
-              ))}
-            </CardBody>
-            <CardFooter className="gap-3">
-              <div className="flex gap-1">
-                <p className=" text-default-400 text-small">Số lượng: </p>
-                <p className="font-semibold text-default-400 text-small">
-                  {soluong}
-                </p>
-              </div>
-              <div className="flex gap-1">
-                <p className="text-default-400 text-small">Tổng tiền: </p>
-                <p className="font-semibold text-default-400 text-small">
-                  {parseInt(tongtien)} VNĐ
-                </p>
-              </div>
-            </CardFooter>
-            <Button
-              color="primary"
-              onClick={() => {
-                const khachHangID = "kh238126"; // Thay thế bằng giá trị khachHangID tương ứng
-                window.location.href = `/quanli_donhang_user?id=${khachHangID}`;
-              }}
-              style={{ margin: 'auto', display: 'block' }}
-            >
-              Thoát
-            </Button>
+                <div className="flex gap-1">
+                  <p className="text-default-400 text-small">Tổng tiền: </p>
+                  <p className="font-semibold text-default-400 text-small">
+                    {parseInt(tongtien)} VNĐ
+                  </p>
+                </div>
+              </CardFooter>
+              <Button
+                color="primary"
+                onClick={() => {
+                  const khachHangID = "kh238126"; 
+                  window.location.href = `/quanli_donhang_user?id=${khachHangID}`;
+                }}
+                style={{ margin: 'auto', display: 'block' }}
+              >
+                Thoát
+              </Button>
 
-          </div>
-        </Card>
+            </div>
+          </Card>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

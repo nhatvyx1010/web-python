@@ -13,6 +13,7 @@ import http from "../utils/http";
 import { useSearchParams } from "next/navigation";
 import { Infodonhang } from "../types/info.type";
 import { deleteCookie, getCookie } from "cookies-next";
+import NavigaComponent from "@/components/NavigaUserComponent";
 
 export default function App() {
   const params = useSearchParams();
@@ -108,125 +109,128 @@ export default function App() {
 
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="p-8 rounded-lg drop-shadow-2xl w-1/3">
-        <Card className="max-w-[340px]">
-          <div className="flex flex-col justify-center items-center gap-1 font-bold h-[desiredHeight] text-lg mb-2.5 mt-2.5">
-            <h2>Thông tin cá nhân</h2>
-            <CardHeader className="justify-between">
-            <div className="flex gap-5">
-              <div className="flex flex-col gap-1 items-start justify-center">
-                <div className="flex w-full flex-wrap items-end md:flex-nowrap  gap-4 pb-2">
-                  <Input
-                    key="outside"
-                    type="text"
-                    label="Họ và Tên"
-                    value={hoTen}
-                    labelPlacement="outside"
-                    onChange={(e) => {
-                      const value = handleInputChange(e);
-                      setHoten(value);
-                    }}
-                  />
-                  <Input
-                    key="outside"
-                    type="Date"
-                    label="Ngày sinh"
-                    value={ngaysinh}
-                    labelPlacement="outside"
-                    onChange={(e) => {
-                      const value = handleDateChange(e);
-                      setNgaySinh(value);
-                    }}
-                  />
-                </div>
-                <div className="flex w-full flex-wrap items-end md:flex-nowrap  gap-4 pb-2">
-                  <Input
-                    key="outside"
-                    type="text"
-                    value={phone}
-                    label="Số điện thoại"
-                    labelPlacement="outside"
-                    onChange={(e) => {
-                      const value = handleInputChange(e);
-                      setPhone(value);
-                    }}
-                  />
-                  <Input
-                    key="outside"
-                    type="text"
-                    value={diachi}
-                    label="Địa chỉ"
-                    labelPlacement="outside"
-                    onChange={(e) => {
-                      const value = handleInputChange(e);
-                      setDiaChi(value);
-                    }}
-                  />
-                </div>
-                <div className="flex w-full flex-wrap items-end md:flex-nowrap  gap-4 pb-2">
-                  <Input
-                    key="outside"
-                    type="text"
-                    value={ghichu}
-                    label="Ghi chú"
-                    labelPlacement="outside"
-                    onChange={(e) => {
-                      const value = handleInputChange(e);
-                      setGhiChu(value);
-                    }}
-                  />
-                </div>
-                <div className="flex w-full flex-wrap items-end md:flex-nowrap  gap-4 pb-2">
-                  <Input
-                    key="outside"
-                    type="text"
-                    value={username}
-                    label="Username"
-                    labelPlacement="outside"
-                    onChange={(e) => {
-                      const value = handleInputChange(e);
-                      setUsername(value);
-                    }}
-                  />
-                  <Input
-                    key="outside"
-                    type="text"
-                    value={password}
-                    label="Password"
-                    labelPlacement="outside"
-                    onChange={(e) => {
-                      const value = handleInputChange(e);
-                      setPassword(value);
-                    }}
-                  />
-                </div>
-                <div className="flex w-full flex-wrap items-end md:flex-nowrap  gap-4 pb-2">
-                <Button
-                  color="default"
-                  onClick={() => window.location.href = '/home_user'}
-                  style={{ margin: 'auto', display: 'block' }}
-                >
-                  Thoát
-                </Button>
-                <Button
-                  color="primary"
-                  onClick={handleUpdate}
-                  style={{ margin: 'auto', display: 'block' }}
-                >
-                  Cập nhật
-                </Button>
+    <>
+      <NavigaComponent />
+      <div className="flex justify-center items-center h-screen">
+        <div className="p-8 rounded-lg drop-shadow-2xl w-1/3">
+          <Card className="max-w-[340px]">
+            <div className="flex flex-col justify-center items-center gap-1 font-bold h-[desiredHeight] text-lg mb-2.5 mt-2.5">
+              <h2>Thông tin cá nhân</h2>
+              <CardHeader className="justify-between">
+              <div className="flex gap-5">
+                <div className="flex flex-col gap-1 items-start justify-center">
+                  <div className="flex w-full flex-wrap items-end md:flex-nowrap  gap-4 pb-2">
+                    <Input
+                      key="outside"
+                      type="text"
+                      label="Họ và Tên"
+                      value={hoTen}
+                      labelPlacement="outside"
+                      onChange={(e) => {
+                        const value = handleInputChange(e);
+                        setHoten(value);
+                      }}
+                    />
+                    <Input
+                      key="outside"
+                      type="Date"
+                      label="Ngày sinh"
+                      value={ngaysinh}
+                      labelPlacement="outside"
+                      onChange={(e) => {
+                        const value = handleDateChange(e);
+                        setNgaySinh(value);
+                      }}
+                    />
+                  </div>
+                  <div className="flex w-full flex-wrap items-end md:flex-nowrap  gap-4 pb-2">
+                    <Input
+                      key="outside"
+                      type="text"
+                      value={phone}
+                      label="Số điện thoại"
+                      labelPlacement="outside"
+                      onChange={(e) => {
+                        const value = handleInputChange(e);
+                        setPhone(value);
+                      }}
+                    />
+                    <Input
+                      key="outside"
+                      type="text"
+                      value={diachi}
+                      label="Địa chỉ"
+                      labelPlacement="outside"
+                      onChange={(e) => {
+                        const value = handleInputChange(e);
+                        setDiaChi(value);
+                      }}
+                    />
+                  </div>
+                  <div className="flex w-full flex-wrap items-end md:flex-nowrap  gap-4 pb-2">
+                    <Input
+                      key="outside"
+                      type="text"
+                      value={ghichu}
+                      label="Ghi chú"
+                      labelPlacement="outside"
+                      onChange={(e) => {
+                        const value = handleInputChange(e);
+                        setGhiChu(value);
+                      }}
+                    />
+                  </div>
+                  <div className="flex w-full flex-wrap items-end md:flex-nowrap  gap-4 pb-2">
+                    <Input
+                      key="outside"
+                      type="text"
+                      value={username}
+                      label="Username"
+                      labelPlacement="outside"
+                      onChange={(e) => {
+                        const value = handleInputChange(e);
+                        setUsername(value);
+                      }}
+                    />
+                    <Input
+                      key="outside"
+                      type="text"
+                      value={password}
+                      label="Password"
+                      labelPlacement="outside"
+                      onChange={(e) => {
+                        const value = handleInputChange(e);
+                        setPassword(value);
+                      }}
+                    />
+                  </div>
+                  <div className="flex w-full flex-wrap items-end md:flex-nowrap  gap-4 pb-2">
+                  <Button
+                    color="default"
+                    onClick={() => window.location.href = '/home_user'}
+                    style={{ margin: 'auto', display: 'block' }}
+                  >
+                    Thoát
+                  </Button>
+                  <Button
+                    color="primary"
+                    onClick={handleUpdate}
+                    style={{ margin: 'auto', display: 'block' }}
+                  >
+                    Cập nhật
+                  </Button>
 
 
+                  </div>
+                
                 </div>
-              
+                {/* onClick={() => handleAdd()} */}
               </div>
-              {/* onClick={() => handleAdd()} */}
+              </CardHeader>
             </div>
-            </CardHeader>
-          </div>
-        </Card>
+          </Card>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

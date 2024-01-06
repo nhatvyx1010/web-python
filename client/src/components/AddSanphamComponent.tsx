@@ -134,7 +134,10 @@ export default function AddSanphamComponent({
         <Button
           color="danger"
           variant="flat"
-          onClick={() => router.push(`/quanli_danhmuc`)}
+          onClick={() => {
+            const idDanhMuc = 'dm0001'; 
+            router.push(`/view_danhmuc?id=${idDanhMuc}`);
+          }}
         >
           Cancel
         </Button>

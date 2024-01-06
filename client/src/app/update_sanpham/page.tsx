@@ -5,6 +5,7 @@ import http from "@/app/utils/http";
 // import { getCookie } from "cookies-next";
 import { MdOutlineDevicesOther } from "react-icons/md";
 import { Tabs, Tab} from "@nextui-org/react";
+import NavigaComponent from "@/components/NavigaComponent";
 import AddSanphamComponent from "@/components/AddSanphamComponent";
 
 interface OptionType {
@@ -52,30 +53,33 @@ export default function AddHome() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="bg-white p-8 rounded-lg drop-shadow-2xl w-1/3">
-        <div className="flex flex-col justify-center items-center gap-1 font-bold h-[desiredHeight] text-lg mb-2.5">
-          <MdOutlineDevicesOther className="text-2xl" />
-          Update sản phẩm
-          <Tabs
-            key="primary"
-            color="primary"
-            aria-label="Tabs colors"
-            radius="full"
-          >
-            <Tab key="sanpham" title="Sản phẩm">
-              <AddSanphamComponent
-                titleInput1="Tên sản phẩm"
-                titleInput2="Thông tin sản phẩm"
-                titleInput3="Giá bán"
-                titleInput4="Tên danh mục"
-                titlebutton = "Update"
-                handleFunction={handleAdd}
-              />
-            </Tab>
-          </Tabs>
+    <>
+      <NavigaComponent />
+      <div className="flex justify-center items-center h-screen">
+        <div className="bg-white p-8 rounded-lg drop-shadow-2xl w-1/3">
+          <div className="flex flex-col justify-center items-center gap-1 font-bold h-[desiredHeight] text-lg mb-2.5">
+            <MdOutlineDevicesOther className="text-2xl" />
+            Update sản phẩm
+            <Tabs
+              key="primary"
+              color="primary"
+              aria-label="Tabs colors"
+              radius="full"
+            >
+              <Tab key="sanpham" title="Sản phẩm">
+                <AddSanphamComponent
+                  titleInput1="Tên sản phẩm"
+                  titleInput2="Thông tin sản phẩm"
+                  titleInput3="Giá bán"
+                  titleInput4="Tên danh mục"
+                  titlebutton = "Update"
+                  handleFunction={handleAdd}
+                />
+              </Tab>
+            </Tabs>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

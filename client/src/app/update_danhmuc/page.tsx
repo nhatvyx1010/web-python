@@ -5,6 +5,7 @@ import http from "@/app/utils/http";
 // import { getCookie } from "cookies-next";
 import { MdOutlineDevicesOther } from "react-icons/md";
 import { Tabs, Tab } from "@nextui-org/react";
+import NavigaComponent from "@/components/NavigaComponent";
 import FormComponent from "@/components/FormComponent";
 
 interface OptionType {
@@ -47,27 +48,30 @@ export default function UpdateDanhmuc() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="bg-white p-8 rounded-lg drop-shadow-2xl w-1/3">
-        <div className="flex flex-col justify-center items-center gap-1 font-bold h-[desiredHeight] text-lg mb-2.5">
-          <MdOutlineDevicesOther className="text-2xl" />
-          Update danh mục
-          <Tabs
-            key="primary"
-            color="primary"
-            aria-label="Tabs colors"
-            radius="full"
-          >
-            <Tab key="danhmuc" title="Danh mục">
-              <FormComponent
-                titleInput1="Tên danh mục"
-                titleInput2="Mô tả"
-                handleFunction={handleUpdate}
-              />
-            </Tab>
-          </Tabs>
+    <>
+      <NavigaComponent />
+      <div className="flex justify-center items-center h-screen">
+        <div className="bg-white p-8 rounded-lg drop-shadow-2xl w-1/3">
+          <div className="flex flex-col justify-center items-center gap-1 font-bold h-[desiredHeight] text-lg mb-2.5">
+            <MdOutlineDevicesOther className="text-2xl" />
+            Update danh mục
+            <Tabs
+              key="primary"
+              color="primary"
+              aria-label="Tabs colors"
+              radius="full"
+            >
+              <Tab key="danhmuc" title="Danh mục">
+                <FormComponent
+                  titleInput1="Tên danh mục"
+                  titleInput2="Mô tả"
+                  handleFunction={handleUpdate}
+                />
+              </Tab>
+            </Tabs>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -7,6 +7,7 @@ import { MdOutlineDevicesOther } from "react-icons/md";
 import { Tabs, Tab, Card, CardBody, CardHeader } from "@nextui-org/react";
 import FormComponent from "@/components/FormComponent";
 import AddKhachHangComponent from "@/components/AddKhachHangComponent";
+import NavigaComponent from "@/components/NavigaComponent";
 
 interface OptionType {
   value: string;
@@ -58,7 +59,9 @@ export default function AddNhanvien() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <>
+      <NavigaComponent />
+      <div className="flex justify-center items-center h-screen">
       <div className="bg-white p-8 rounded-lg drop-shadow-2xl w-1/3">
         <div className="flex flex-col justify-center items-center gap-1 font-bold h-[desiredHeight] text-lg mb-2.5">
           <MdOutlineDevicesOther className="text-2xl" />
@@ -87,5 +90,6 @@ export default function AddNhanvien() {
         </div>
       </div>
     </div>
+  </>
   );
 }
