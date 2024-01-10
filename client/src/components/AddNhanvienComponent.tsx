@@ -3,6 +3,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Button, SelectItem, select } from "@nextui-org/react";
 import { Select, Input } from "@nextui-org/react";
+import http from "@/app/utils/http";
 
 interface Type {
   titleInput1: string;
@@ -52,6 +53,35 @@ export default function AddNhanvienComponent({
     // Sử dụng hàm được truyền từ prop
     await handleFunction(hoten, ngaysinh, phone,diachi,gmail,username,password,ghichu);
   };
+
+  
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await http.get(
+          `get_nhanvien_info_update/${params.get("id")}`
+        );
+
+        if (response.status === 200) {
+          setHoten(response.data.nhanvien_info.HoTen);
+          setNgaysinh(response.data.nhanvien_info.NgaySinh);
+          setPhone(response.data.nhanvien_info.Phone);
+          setDiachi(response.data.nhanvien_info.DiaChi);
+          setGhichu(response.data.nhanvien_info.GhiChu);
+          setGmail(response.data.nhanvien_info.Gmail);
+          setUsername(response.data.nhanvien_info.Username);
+          setPassword(response.data.nhanvien_info.Password);
+          // console.log(response.data.khachhangs);
+        } else {
+          console.log("Loi he thong");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   return (
     <>

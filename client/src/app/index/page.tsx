@@ -144,7 +144,7 @@ export default function Homepage() {
           </Card>
         </div>
       </div>
-      <div className="flex justify-center items-center">
+      <div className="flex flex-col justify-center items-center">
         <ItemIndexComponent onDetailSanPham={onDetailSanPhamHandler} setSelectedItem={setSelectedItem} />
         <ItemModal selectedItem={selectedItem} onClose={closeModal} />
       </div>

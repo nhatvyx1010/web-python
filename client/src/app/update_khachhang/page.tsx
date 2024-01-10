@@ -47,7 +47,7 @@ export default function AddNhanvien() {
         console.log(result);
         if (result.status == 200) {
           alert("Update thành công");
-        } else if (result.status != 200) {
+        } else {
           alert("Update thất bại");
         }
       } catch (error) {

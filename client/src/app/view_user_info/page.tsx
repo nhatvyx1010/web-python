@@ -131,7 +131,7 @@ export default function App() {
                         setHoten(value);
                       }}
                     />
-                    <Input
+                    {/* <Input
                       key="outside"
                       type="Date"
                       label="Ngày sinh"
@@ -141,7 +141,7 @@ export default function App() {
                         const value = handleDateChange(e);
                         setNgaySinh(value);
                       }}
-                    />
+                    /> */}
                   </div>
                   <div className="flex w-full flex-wrap items-end md:flex-nowrap  gap-4 pb-2">
                     <Input

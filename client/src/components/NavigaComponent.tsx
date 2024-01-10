@@ -129,7 +129,7 @@ export default function NavigaComponent() {
                 startContent={icons.scale}
                 onClick={() => router.push(`/quanli_danhsach`)}
               >
-                Quản lý danh sách
+                Quản lý danh sách tài khoản
               </DropdownItem>
               <DropdownItem
                 key="usage_metrics"

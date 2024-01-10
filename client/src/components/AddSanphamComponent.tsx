@@ -1,9 +1,10 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { Button, SelectItem, select } from "@nextui-org/react";
+import { Button, SelectItem, Select } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 import Dropzone from "react-dropzone";
+import http from "@/app/utils/http";
 
 interface Type {
   titleInput1: string;
@@ -18,6 +19,10 @@ interface Type {
     input4: string,
     image: File | null
   ) => Promise<void>;
+}
+interface DanhMuc {
+  TenDanhMuc: string;
+  // Other properties if available
 }
 
 export default function AddSanphamComponent({
@@ -34,8 +39,11 @@ export default function AddSanphamComponent({
   const [input2, setInput2] = useState("");
   const [input3, setInput3] = useState("");
   const [input4, setInput4] = useState("");
+  const [listDanhMuc, setListDanhMuc] = useState<DanhMuc[]>([]); // Use the DanhMuc interface
+
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState<File | null>(null);
+  const params = useSearchParams();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -53,6 +61,49 @@ export default function AddSanphamComponent({
     setImage(acceptedFiles[0]);
     setIsImage(true);
   };
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await http.get(
+          `sanpham_select/${params.get("id")}`
+        );
+
+        if (response.status === 200) {
+          setInput1(response.data.sanpham_dict.TenSanPham);
+          setInput2(response.data.sanpham_dict.ThongTinSanPham);
+          setInput3(response.data.sanpham_dict.GiaBan);
+          setInput4(response.data.sanpham_dict.TenDanhMuc);
+          setImage(response.data.sanpham_dict.Image);
+          // console.log(response.data.khachhangs);
+        } else {
+          console.log("Loi he thong");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
+  
+  useEffect(() => {
+    async function fetchDanhMuc() {
+      try {
+        const response = await http.get(`get_list_danhmuc`);
+        if (response.status === 200) {
+          const danhMucsData: DanhMuc[] = response.data.danhmucs;
+          setListDanhMuc(danhMucsData);
+        } else {
+          console.log('Error fetching danh muc');
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    fetchDanhMuc();
+  }, []);
 
   return (
     <>
@@ -102,6 +153,31 @@ export default function AddSanphamComponent({
           setInput4(value);
         }}
       />
+
+{/* <Select
+  label={titleInput4}
+  value={input4}
+  onChange={(e) => setInput4(e.target.value)}
+  className="mb-5 h-12 mr-32"
+>
+  <SelectItem key="" value="">
+    Chọn danh mục
+  </SelectItem>
+  {listDanhMuc.map((danhMuc: DanhMuc, index: number) => (
+    <SelectItem
+      key={index.toString()}
+      value={danhMuc.TenDanhMuc}
+    >
+      {danhMuc.TenDanhMuc}
+    </SelectItem>
+  ))}
+</Select> */}
+
+
+
+
+
+  
       {isImage ? (
         // Display the selected image
         <div className="mb-5">

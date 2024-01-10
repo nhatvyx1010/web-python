@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Button, SelectItem, select } from "@nextui-org/react";
 import { Select, Input } from "@nextui-org/react";
 // import { getCookie, hasCookie } from "cookies-next";
+import http from "@/app/utils/http";
 
 interface Type {
   titleInput1: string;
@@ -16,6 +17,7 @@ export default function FormComponent( {titleInput1, titleInput2, handleFunction
 
   const [input1, setInput1] = useState("");
   const [input2, setInput2] = useState("");
+  const params = useSearchParams();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -27,35 +29,28 @@ export default function FormComponent( {titleInput1, titleInput2, handleFunction
     await handleFunction(input1, input2);
   };
 
-  // const handleButtonDevice = async () => {
-  //   if (selectedValue && name != "" && pin != "") {
-  //     const data = {
-  //       device: selectedValue,
-  //       name,
-  //       pin,
-  //       home_id: params.get("id"),
-  //     };
-  //     try {
-  //       const response = await http.post("api/ir/create", data, {
-  //         // headers: {
-  //         //   Authorization: `${getCookie("token")?.toString()}`,
-  //         // },
-  //       });
-  //       const result = await response.data;
-  //       console.log(result);
-  //       if (result.code == 200) {
-  //         console.log(result.data.data.message);
-  //         // dispatch(successPopUp(result.data.message));
-  //       } else if (result.code != 200) {
-  //         // dispatch(failPopUp(result.data.message));
-  //       }
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   } else {
-  //     // dispatch(failPopUp("E001"));
-  //   }
-  // };
+  
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await http.get(
+          `danhmuc_info/${params.get("id")}`
+        );
+
+        if (response.status === 200) {
+          setInput1(response.data.danhmuc.TenDanhMuc);
+          setInput2(response.data.danhmuc.MoTa);
+          // console.log(response.data.khachhangs);
+        } else {
+          console.log("Loi he thong");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   return (
     <>

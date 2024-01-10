@@ -290,7 +290,7 @@ export default function Quanlydanhsach() {
                     <TableColumn>Họ Tên</TableColumn>
                     <TableColumn>Ngày Sinh</TableColumn>
                     <TableColumn>Địa chỉ</TableColumn>
-                    <TableColumn>Ghi Chú</TableColumn>
+                    {/* <TableColumn>Ghi Chú</TableColumn> */}
                     <TableColumn>Phone</TableColumn>
                     <TableColumn>Chức năng</TableColumn>
                   </TableHeader>
@@ -323,13 +323,13 @@ export default function Quanlydanhsach() {
                             </div>
                           </TableCell>
 
-                          <TableCell>
+                          {/* <TableCell>
                             <div className="flex flex-col items-start justify-start">
                               <span className="font-semibold">
                                 {value.GhiChu}
                               </span>
                             </div>
-                          </TableCell>
+                          </TableCell> */}
 
                           <TableCell>
                             <div className="flex flex-col items-start justify-start">

@@ -16,7 +16,9 @@ interface OptionType {
 
 export default function AddNhanvien() {
 
+
   const params = useSearchParams();
+
 
   const handleAdd = async (
     input1: string,
