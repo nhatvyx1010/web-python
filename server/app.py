@@ -562,6 +562,35 @@ def get_user_info_all():
     except jwt.InvalidTokenError:
         return jsonify({'error': 'Invalid token'}), 401
 
+@app.route('/get_nhanvien_info_update/<string:nhanvien_id>', methods=['GET'])
+def get_nhanvien_info_update(nhanvien_id):
+    connection = connect_to_db()
+    cursor = connection.cursor()
+    cursor.execute('SELECT * FROM nhanvien WHERE NhanVienID=%s', (nhanvien_id,))
+    nhanvien = cursor.fetchone()
+    nv_info = {
+        'NhanVienID': nhanvien[0],
+        'HoTen': nhanvien[1],
+        'NgaySinh': nhanvien[2].strftime('%Y-%m-%d'),
+        'Phone': nhanvien[3],
+        'DiaChi': nhanvien[4],
+        'Gmail': nhanvien[6],
+        'GhiChu': nhanvien[7],
+    }
+
+    cursor.execute('SELECT * FROM user WHERE UserID=%s', (nhanvien[8],))
+    nhanvien = cursor.fetchone()
+    nv_info_nv  = {
+        'Username': nhanvien[1],
+        'Password': nhanvien[2],
+    }
+    nv_info.update(nv_info_nv)
+    cursor.close()
+    connection.close()
+    
+
+    response = {'status': 200, 'nhanvien_info': nv_info}
+    return jsonify(response)
 
 @app.route('/nhanvien_add', methods=['POST'])
 def nhanvien_add():
@@ -653,8 +682,6 @@ def khachhang_index():
     cursor.execute('SELECT * FROM khachhang')
     khachhangs = cursor.fetchall()
 
-    cursor.close()
-    connection.close()
 
     khachhangs_list = []
     for khachhang in khachhangs:
@@ -663,12 +690,14 @@ def khachhang_index():
             'HoTen': khachhang[1],
             'Phone': khachhang[2],
             'DiaChi': khachhang[3],
-            'NgaySinh': khachhang[4],
+            'NgaySinh': khachhang[4].strftime('%Y-%m-%d'),
             'GhiChu': khachhang[5],
             'UserID': khachhang[6]
         }
         khachhangs_list.append(khachhang_dict)
 
+    cursor.close()
+    connection.close()
     
     response = {'status': 200, 'khachhangs': khachhangs_list}
     return jsonify(response)
@@ -682,17 +711,25 @@ def khachhang_info(khachhang_id):
     cursor.execute('SELECT * FROM khachhang WHERE KhachHangID=%s', (khachhang_id,))
     khachhang = cursor.fetchone()
 
-    cursor.close()
-    connection.close()
 
     khachhang_info = {
         'HoTen': khachhang[1],
         'Phone': khachhang[2],
         'DiaChi': khachhang[3],
-        'NgaySinh': khachhang[4],
+        'NgaySinh': khachhang[4].strftime('%Y-%m-%d'),
         'GhiChu': khachhang[5]
     }
     
+    cursor.execute('SELECT * FROM user WHERE UserID=%s', (khachhang[6],))
+    nhanvien = cursor.fetchone()
+    nv_info_nv  = {
+        'Username': nhanvien[1],
+        'Password': nhanvien[2],
+    }
+    khachhang_info.update(nv_info_nv)
+
+    cursor.close()
+    connection.close()
     response = {'status': 200, 'khachhang_info': khachhang_info}
     return jsonify(response)
 
@@ -828,6 +865,47 @@ def danhmuc_index():
     response = {'status': 200, 'danhmucs': danhmucs_list}
     return jsonify(response)
 
+@app.route('/get_list_danhmuc', methods=['GET'])
+def get_list_danhmuc():
+    
+    connection = connect_to_db()
+    cursor = connection.cursor()
+
+    cursor.execute('SELECT * FROM danhmuc')  
+    danhmucs = cursor.fetchall()
+
+    # Convert danh sách thành từ điển để jsonify có thể xử lý
+    danhmucs_list = []
+    for danhmuc in danhmucs:
+        danhmuc_dict = {
+            'TenDanhMuc': danhmuc[1]
+        }
+        danhmucs_list.append(danhmuc_dict)
+
+    cursor.close()
+    connection.close()
+    response = {'status': 200, 'danhmucs': danhmucs_list}
+    return jsonify(response)
+
+@app.route('/danhmuc_info/<string:danhmuc_id>', methods=['GET'])
+def danhmuc_info(danhmuc_id):
+    connection = connect_to_db()
+    cursor = connection.cursor()
+
+    cursor.execute('SELECT * FROM danhmuc WHERE DanhMucID=%s', (danhmuc_id))  
+    danhmuc = cursor.fetchone()
+
+    danhmuc_dict = {
+        'DanhMucID': danhmuc[0],
+        'TenDanhMuc': danhmuc[1],
+        'MoTa': danhmuc[2]
+    }
+
+    cursor.close()
+    connection.close()
+    response = {'status': 200, 'danhmuc': danhmuc_dict}
+    return jsonify(response)
+
 @app.route('/danhmuc_find/<string:danhmuc_id>', methods=['GET'])
 def danhmuc_find(danhmuc_id):
     
@@ -955,6 +1033,7 @@ def sanpham_select(sanpham_id):
         'TenSanPham': sanpham[1],
         'ThongTinSanPham': sanpham[2],
         'GiaBan': sanpham[3],
+        'Image': sanpham[4],
         'DanhMucID': sanpham[5],
         'TenDanhMuc': ten[0] if ten else None
     }
@@ -1041,7 +1120,8 @@ def sanpham_update(sanpham_id):
             else:
                 return 'No selected file'
         else:
-            return 'No file part'
+            cursor.execute('SELECT Image FROM sanpham WHERE SanPhamID = %s', sanpham_id)
+            image_path = cursor.fetchone()[0]
         
         cursor.execute('SELECT DanhMucID FROM danhmuc WHERE TenDanhMuc = %s', tendanhmuc)
         danhmucid = cursor.fetchone()[0]
