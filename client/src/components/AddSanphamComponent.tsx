@@ -1,7 +1,7 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { Button, SelectItem, Select } from "@nextui-org/react";
+import { Button, SelectItem, Select, Textarea  } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 import Dropzone from "react-dropzone";
 import http from "@/app/utils/http";
@@ -40,6 +40,7 @@ export default function AddSanphamComponent({
   const [input3, setInput3] = useState("");
   const [input4, setInput4] = useState("");
   const [listDanhMuc, setListDanhMuc] = useState<DanhMuc[]>([]); // Use the DanhMuc interface
+  const [selectedOption, setSelectedOption] = useState<string>('');
 
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState<File | null>(null);
@@ -60,6 +61,12 @@ export default function AddSanphamComponent({
     // Handle the dropped files (in this case, only the first file is used)
     setImage(acceptedFiles[0]);
     setIsImage(true);
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = e.target.value;
+    setSelectedOption(selectedValue);
+    setInput4(selectedValue);
   };
 
   useEffect(() => {
@@ -119,12 +126,12 @@ export default function AddSanphamComponent({
         }}
       />
 
-      <Input
+      <Textarea
         isRequired
-        type="text"
+        // type="text"
         label={titleInput2}
         value={input2}
-        className="mb-5 h-12 mr-32"
+        className="mb-5  mr-32"
         onChange={(e) => {
           const value = handleInputChange(e);
           setInput2(value);
@@ -142,7 +149,7 @@ export default function AddSanphamComponent({
         }}
       />
 
-      <Input
+      {/* <Input
         isRequired
         type="text"
         label={titleInput4}
@@ -152,8 +159,40 @@ export default function AddSanphamComponent({
           const value = handleInputChange(e);
           setInput4(value);
         }}
-      />
+      /> */}
 
+    <div>
+      <select value={selectedOption} 
+              onChange={handleSelectChange} 
+              className="select-style mb-5 h-12 mr-32" 
+              style={{
+                backgroundColor: '#f4f4f4',
+                padding: '10px',
+                fontSize: '16px',
+                borderRadius: '15px',
+              }} >
+        <option value="" disabled>Select an option</option>
+        {listDanhMuc.map((danhmuc, index) => (
+          <option key={index} value={danhmuc.TenDanhMuc.toString()}>
+            {danhmuc.TenDanhMuc}
+          </option>
+        ))}
+      </select>
+      <div hidden>
+        <Input
+          hidden
+          isRequired
+          type="text"
+          label={titleInput4}
+          value={input4}
+          className="mb-5 h-12 mr-32"
+          onChange={(e) => {
+            const value = e.target.value;
+            setInput4(value);
+          }}
+        />
+      </div>
+    </div>
 {/* <Select
   label={titleInput4}
   value={input4}

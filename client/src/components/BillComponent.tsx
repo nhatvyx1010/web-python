@@ -26,15 +26,17 @@ interface BillComponentProps {
 }
 
 export default function BillComponent({ billItems, onRemoveFromBill }: BillComponentProps) {
+  const defaultNgaymua = '2000-01-01';
+  
   const [sanPhamIDs, setSanPhamIDs] = useState<string[]>([]);
   const [soluong, setSoluong] = useState<number>(0);
   const [tongtien, setTongtien] = useState<number>(0);
   const [ten, setTen] = useState("");
-  const [ngaysinh, setNgaysinh] = useState("");
+  const [ngaysinh, setNgaysinh] = useState(defaultNgaymua);
   const [phone, setPhone] = useState("");
   const [diachi, setDiachi] = useState("");
   const [ghichu, setGhichu] = useState("");
-  const [ngaymua, setNgaymua] = useState("");
+  const [ngaymua, setNgaymua] = useState(new Date().toISOString().split('T')[0]);
 
   const [billItem, setBillItems] = useState<BillItem[]>([]);
 
@@ -167,11 +169,11 @@ export default function BillComponent({ billItems, onRemoveFromBill }: BillCompo
                     }}
                   />
                   <Input
+                    label="Ngày sinh"
+                    labelPlacement="outside"
                     key="outside"
                     type="Date"
                     value={ngaysinh}
-                    label=""
-                    labelPlacement="outside"
                     onChange={(e) => {
                       const value = handleDateChange(e);
                       setNgaysinh(value);
@@ -218,7 +220,7 @@ export default function BillComponent({ billItems, onRemoveFromBill }: BillCompo
                     key="outside"
                     type="date"
                     value={ngaymua}
-                    label=""
+                    label="Ngày mua"
                     // Ngày mua
                     labelPlacement="outside"
                     onChange={(e) => {

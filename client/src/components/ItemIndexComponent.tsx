@@ -56,6 +56,11 @@ export default function ItemComponent({ onDetailSanPham, setSelectedItem }: Item
     
   };
 
+  const [selectedOption, setSelectedOption] = useState<string>("");
+  const options = [
+    'Tăng dần',
+    'Giảm dần',
+  ];
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value.toLowerCase();
     // Filter items based on the input value
@@ -65,31 +70,64 @@ export default function ItemComponent({ onDetailSanPham, setSelectedItem }: Item
     );
     setFilteredItems(filtered);
   };
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = e.target.value;
+    setSelectedOption(selectedValue);
+    let filtered = items;
+
+    if (selectedValue === "Tăng dần") {
+      filtered = filtered.filter((item) => item.GiaBan).sort((a, b) => parseInt(a.GiaBan) - parseInt(b.GiaBan));
+    } else if (selectedValue === "Giảm dần") {
+      filtered = filtered.filter((item) => item.GiaBan).sort((a, b) => parseInt(b.GiaBan) - parseInt(a.GiaBan));
+    }
+  
+    setFilteredItems(filtered);
+  };
 
   return (
     <>
       <div className="flex flex-col md:flex-row gap-4 mb-5">
-        <div className="flex flex-col items-start mr-10" >
-          <div className="flex gap-2 items-center">
-            <Input
-              key="outside"
-              type="text"
-              label="Giá tiền"
-              labelPlacement="outside"
-            />
-            <TbFilterSearch className="text-3xl text-purple-800 mt-4" />
+          <div className="flex flex-col items-start mr-10" >
+            <label htmlFor="selectInput" className="block text-sm font-medium text-gray-700 mb-1" style={{ marginLeft: '45%', height: '100%' }}>
+            Loại sản phẩm
+          </label>
+
+          <div className="flex gap-2 items-center relative">
+            <select 
+              id="selectInput"
+              value={selectedOption} 
+              // onChange={handleFilterChange} 
+              onChange={handleSelectChange} 
+              className="select-style h-10 ml-32" 
+              style={{
+                backgroundColor: '#f4f4f4',
+                paddingLeft: '8px',
+                fontSize: '16px',
+                borderRadius: '15px',
+              }}
+            >
+              <option value="" disabled>Select an option</option>
+              {options.map((option, index) => (
+                <option key={index} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+            <TbFilterSearch className="text-3xl text-purple-800" />
           </div>
         </div>
         <div className="flex flex-col items-start">
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center relative">
             <Input
               key="outside"
               type="text"
               label="Tên sản phẩm"
               labelPlacement="outside"
+              // onChange={handleFilterChange} 
               onInput={handleInputChange}
+              id="textInput"
             />
-            <FaSearch className="text-2xl text-purple-800 mt-4" />
+            <FaSearch className="text-3xl text-purple-800 mt-5" />
           </div>
         </div>
       </div>
